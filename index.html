@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<head>
+<title>Abgeordnetenfinder</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-65615120-8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-65615120-8');
+</script>
+</head>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+    @font-face {
+  font-family: 'Merriweather Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/fonts/merriweather-sans-v10-latin_latin-ext-300.eot');
+  /* IE9 Compat Modes */
+  src: local('Merriweather Sans Light'), local('MerriweatherSans-Light'), url('/fonts/merriweather-sans-v10-latin_latin-ext-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-300.woff2') format('woff2'), /* Super Modern Browsers */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-300.woff') format('woff'), /* Modern Browsers */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-300.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-300.svg#MerriweatherSans') format('svg');
+  /* Legacy iOS */
+}
+@font-face {
+  font-family: 'Merriweather Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/merriweather-sans-v10-latin_latin-ext-regular.eot');
+  /* IE9 Compat Modes */
+  src: local('Merriweather Sans'), local('MerriweatherSans-Regular'), url('/fonts/merriweather-sans-v10-latin_latin-ext-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-regular.woff2') format('woff2'), /* Super Modern Browsers */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-regular.woff') format('woff'), /* Modern Browsers */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-regular.svg#MerriweatherSans') format('svg');
+  /* Legacy iOS */
+}
+@font-face {
+  font-family: 'Merriweather Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/merriweather-sans-v10-latin_latin-ext-700.eot');
+  /* IE9 Compat Modes */
+  src: local('Merriweather Sans Bold'), local('MerriweatherSans-Bold'), url('/fonts/merriweather-sans-v10-latin_latin-ext-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-700.woff2') format('woff2'), /* Super Modern Browsers */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-700.woff') format('woff'), /* Modern Browsers */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-700.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('/fonts/merriweather-sans-v10-latin_latin-ext-700.svg#MerriweatherSans') format('svg');
+  /* Legacy iOS */
+}
+@font-face {
+  font-family: "Jost*";
+  font-weight: normal;
+  src: url("JostBook.ttf") format("truetype");
+}
+    h1,h2,h3,h4,h5,h6,.jost {
+        font-family: "Jost*";
+    }
+    p,span,input,div {
+        font-family: "Merriweather Sans";
+    }
+     /* primary:         #1DA64A;  
+        secondary:     #1B7340;
+     */
+    .originals
+    {
+        display: none;
+    }
+    html {
+        height: 100%;
+    }
+    body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    }
+    .content {
+    flex: 1;
+    }
+    body {
+
+    }
+
+    input {
+        width: 75%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .submit-button {
+        max-width: 350px;
+        width: 23%;
+        background: #1B7340;
+        color: white !important;
+        padding:19px;
+        text-transform: inherit;
+        border: none;
+        border-radius: 4px;
+        letter-spacing: normal;
+        font-size: 16px;
+        line-height: 1em;
+    }
+    #wahlkreis_leer {
+        display: none;
+    }
+
+    .twitterhandle {
+        font-size: 0.67em;
+    }
+    .ci_level {
+        color: #1DA64A;
+    }
+    .jumbotron {
+        background: #fff;
+    }
+
+
+
+</style>
+
+<!-- SAG HALLO UND FRAG NACH POLITIKER*INNEN IN DEINER NÄHE -->
+<div id="primaryinteractionlevel" class="container">
+    <div class="ui_tool">
+        <input maxlength="5" onkeypress='validate(event)' pattern="[0-9]*" type="number" id="plz_input" autocomplete="off" placeholder="PLZ eingeben" id="suche" style="display: inline-block;">
+        <button id="startrequest" class="submit-button" onclick="request_information_ui();" class="start_ui_request_button">Suche</button>
+    </div>
+</div>
+
+
+<!-- ICH WEISS, WO DEIN HAUS WOHNT -->
+<div id="secondaryinteractionlevel" class="container">
+</div>
+<div id="waiting" class="container">
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-4 ci_level">Nichts gefunden.</h1>
+            <p class="lead">Hast du dich vertippt?</p>
+        </div>
+    </div>
+</div>
+<div class="footer container">
+    <p style="font-size:9px">Alle Angaben ohne Gewähr. Daten von <a class="ci_level" href="umweltinstitut.org">umweltinstitut.org</a>. Programmierung von JF im Rahmen von Fridays For Future. Hier eingegebene Daten werden von Fridays for Future Deutschland weder gespeichert noch in irgendeiner Form protokolliert. Zu Analysezwecken nutzen wir hier Google-Analytics.<br><a class="ci_level" href="https://fridaysforfuture.de/datenschutz/">Datenschutzerklärung</a> <a class="ci_level" href=https://fridaysforfuture.de/impressum/>Impressum</a><br> Es besteht die Möglichkeit, dass das Umweltinstitut aus Sicherheitsgründen IP-Adressen loggt. .</p>
+</div>
+
+
+<script>
+    document.getElementById("waiting").style.display = "none";
+    var input = document.getElementById("plz_input");
+    input.addEventListener("keyup", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("startrequest").click();
+    }
+    });
+
+    function request_information_ui()
+    {
+        console.log("Request startet");
+        var plz = $( "#plz_input" ).val();
+        var endpoint = "https://www.umweltinstitut.org/index.php?eID=wahlkreis_search&action=mdb_by_plz_office&plz=" + plz;
+        var testpoint = "https://fridaysforfuture.de/dev/example.json";
+        console.log(endpoint);
+        $.ajax({
+            type: "get", url: endpoint,
+            success: function (data, text) {
+                document.getElementById("secondaryinteractionlevel").innerHTML = "";
+                console.log(data);
+                document.getElementById("waiting").style.display = "none";
+                if (data === undefined || data.length == 0) 
+                {
+                    console.log("LEER!");
+                    document.getElementById("waiting").style.display = "block";
+                }
+                for (var wahlkreis in data) // Für einzelne Wahlkreise
+                {
+                    console.log("Wahlkreis: " + wahlkreis);
+                    var div = document.getElementById("wahlkreis");
+                    var clone = div.cloneNode(true); 
+                    clone.id = "wahlkreis_" + wahlkreis;
+                    document.getElementById("secondaryinteractionlevel").appendChild(clone);
+
+                    document.getElementById(clone.id).querySelector("#wahlkreis_id").innerHTML = wahlkreis;
+                    document.getElementById(clone.id).querySelector("#wahlkreis_bezeichnung").innerHTML = data[wahlkreis]["WAHLKREISBEZEICHNUNG"];
+
+                    for (var mdb in data[wahlkreis]["mdbs"]) // Für jede/n Ansprechpartner*in im Wahlkreis
+                    {
+                        console.log("MDB: " + mdb);
+                        var div_mdb = document.getElementById("mdb");
+                        var clone_mdb = div_mdb.cloneNode(true); 
+                        clone_mdb.id = "mdb_" + mdb;
+                        document.getElementById(clone.id).querySelector(".card").appendChild(clone_mdb);
+                        fill_mdb_info(clone_mdb.id,data[wahlkreis]["mdbs"][mdb]);
+
+                    }
+                }
+                
+            },
+            error: function (request, status, error) {
+                alert(request.responseText,error);
+            }
+        });
+    }
+
+    function fill_mdb_info(id,mdb)
+    {
+        // TITEL, NAME, VORNAME
+        if (mdb["TITLE"])
+        {
+            document.getElementById(id).querySelector("#mdb_name").innerHTML = mdb["TITLE"] + " " + mdb["VORNAME"] + " " + mdb["NACHNAME"];
+        }
+        else
+        {
+            document.getElementById(id).querySelector("#mdb_name").innerHTML = mdb["VORNAME"] + " " + mdb["NACHNAME"];
+        }
+        // PARTEI, PARTEILOS
+        if (mdb["PARTEI"])
+        {
+            document.getElementById(id).querySelector("#mdb_party").innerHTML = mdb["PARTEI"];
+        }
+        else
+        {
+            document.getElementById(id).querySelector("#mdb_party").innerHTML = "Parteilos"
+        }
+        // TWITTER
+        if (mdb["TWITTERNAME"])
+        {
+            console.log(mdb["TWITTERNAME"]);
+            // document.getElementById(id).querySelector("#mdb_twitter").innerHTML = "<a href='https://twitter.com/" + mdb["TWITTERNAME"] +"'>@" + mdb["TWITTERNAME"] + "</a>'";
+            // document.getElementById(id).querySelector("#mdb_twitter").innerHTML = "<a href='https://twitter.com/" + mdb["TWITTERNAME"] +"'>@" + mdb["TWITTERNAME"] + "</a>'";
+            console.log("TWITTER");
+            var tw = "<a class='twitterhandle' href='https://twitter.com/" + mdb["TWITTERNAME"] +"'>    @" + mdb["TWITTERNAME"] + "</a>";
+            document.getElementById(id).querySelector("#mdb_twitter").innerHTML = tw;
+        }
+
+        // ADRESSE
+        if (mdb["KONTAKT"])
+        {
+            for (var adresse in mdb["KONTAKT"]) // FÜR JEDE ADRESSE
+            {
+                console.log("ADRESSE");
+                var div_adresse = document.getElementById("anfahrt");
+                var clone_adresse = div_adresse.cloneNode(true); 
+                clone_adresse.id = "mdb_" + id + adresse;
+                document.getElementById(id).querySelector("#adressenbody").appendChild(clone_adresse);
+                filladress(clone_adresse.id,mdb["KONTAKT"][adresse]);
+
+            }
+        }
+
+        // "TELEFON":"+49 30 227 73450",
+        //            "EMAIL":"norbert.barthle@bundestag.de"
+
+        
+
+    }
+
+
+    function filladress(adressID,adresse)
+    {
+        document.getElementById(adressID).querySelector("#TYP").innerHTML = adresse["TYP"];
+        document.getElementById(adressID).querySelector("#PLZ").innerHTML = adresse["PLZ"];
+        document.getElementById(adressID).querySelector("#ORT").innerHTML = adresse["ORT"];
+        document.getElementById(adressID).querySelector("#STRASSE").innerHTML = adresse["STRASSE"];
+        document.getElementById(adressID).querySelector("#telefon").innerHTML = adresse["TELEFON"];
+        document.getElementById(adressID).querySelector("#mail").innerHTML = adresse["EMAIL"];
+        document.getElementById(adressID).querySelector("#callurl").href = "tel:" + adresse["TELEFON"];
+        document.getElementById(adressID).querySelector("#mailtourl").href = "mailto:" + adresse["EMAIL"];
+
+        var googleform_adresse = adresse["STRASSE"].replace(" ","+");
+
+        // Generate Google Maps Link
+        var googlemapsbase = "https://www.google.de/maps/place/";
+        googlemapsbase+=googleform_adresse + ",";
+        googlemapsbase+="+";
+        googlemapsbase+=adresse["PLZ"];
+        googlemapsbase+="+";
+        googlemapsbase+=adresse["ORT"];
+        document.getElementById(adressID).querySelector("#openMap").href = googlemapsbase;
+    }
+
+
+    // VALIDIERUNG
+    function validate(evt) {
+        var theEvent = evt || window.event;
+
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+        // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]/;
+        if( !regex.test(key) ) {
+            theEvent.returnValue = false;
+            if(theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
+    
+
+</script>
+<!-- WAHLKREISE -->
+<div class="originals" id="originals">
+    <div id="wahlkreis" class="container float-left" style="min-width: 75%">
+            <div class="card" style="width: 100%">
+            <br>
+            <h3 class="container card-title"> <span id="wahlkreis_bezeichnung" class="wahlkreis_bezeichnung jost"><b>Wahlkreis</b></span></h3>
+            <h6 class="container card-title">Wahlkreis <span id="wahlkreis_id" class="wahlkreis_id jost"><b>XXX</b></span></h6>
+                <!-- MDBS -->
+            </div>
+    </div>
+    <div id="mdb" class="card-body container">
+                    <span id="mdb_name" class="card-title mb-2 jost" style="font-size: 2.17em; margin: .83em 0">Name Vorname    </span>    <span id="mdb_twitter" class="text-muted"></span>
+                    <h6 id="mdb_party" class="card-title text-muted">Partei</h6>
+                        <div id="adressenbody" class="">
+                            <p class="text-muted container">Adresse(n) und Kontaktmöglichkeiten</p>
+                                <div id="adressenbody">
+
+                                </div>
+                        </div>
+                    <hr>
+    </div>
+
+    <div id="anfahrt" class="container">
+        <span class="">Telefon ✆ <br> <a id="callurl" href=""><span id="telefon">???-???-???</span></span><br></a>
+        <span class="">Mail ＠ <br><a id="mailtourl" href=""><span id="mail">???-???-???</span></span></a>
+        <br>
+        <span> <b><span id="TYP"></span></b></span><br>
+        <span><span id="STRASSE"></span><br><span id="PLZ"></span> <span id="ORT"></span></span><br>
+        <a id="openMap" href="">Karte öffnen</a>
+        <hr>
+    <div>
+</div>
+</div>
